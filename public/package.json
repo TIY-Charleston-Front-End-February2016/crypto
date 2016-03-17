@@ -23,7 +23,7 @@
 
     "bundle": "node_modules/.bin/browserify js/main.js -o bundle.js",
     "watch": "node_modules/.bin/node-sass styles/styles.scss styles/styles.css -w & node_modules/.bin/watchify js/main.js -o js/bundle.js",
-    "start": "cd ../ && java -jar"
+    "start": "cd ../ && java -jar TalesFromTheCryptoGram-0.0.1-SNAPSHOT.jar"
   },
   "author": "",
   "license": "ISC"
