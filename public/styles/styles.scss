@@ -1,0 +1,25 @@
+body {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+nav {
+  background-color: #1098F7;
+}
+
+.homepage {
+
+}
+
+div.message {
+  border-bottom: .5px solid #bce8f1;
+  h5 {
+    display: inline-block;
+  }
+  p {
+    display: inline-block;
+  }
+  .msgBtns {
+    float: right;
+  }
+}
