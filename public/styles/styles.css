@@ -13,3 +13,6 @@ div.message {
     display: inline-block; }
   div.message .msgBtns {
     float: right; }
+
+div.sendMsg .sendMsgBtns {
+  float: right; }
