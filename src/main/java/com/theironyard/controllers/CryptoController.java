@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by PiratePowWow on 3/17/16.
@@ -23,8 +26,15 @@ public class CryptoController {
     @Autowired
     CryptogramRepository cryptograms;
     @PostConstruct
-    public void init() throws SQLException {
+    public void init() throws SQLException, FileNotFoundException, PasswordStorage.CannotPerformOperationException {
         Server.createWebServer().start();
+        File f = new File("testusers.csv");
+        Scanner s = new Scanner(f);
+        while(s.hasNext()){
+            String[] testusers = s.nextLine().split(",");
+            User user = new User(testusers[0], PasswordStorage.createHash(testusers[1]));
+            users.save(user);
+        }
     }
 
     @RequestMapping(path = "/user", method = RequestMethod.GET)
