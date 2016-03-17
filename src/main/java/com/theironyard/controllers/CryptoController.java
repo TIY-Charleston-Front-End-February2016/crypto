@@ -60,7 +60,7 @@ public class CryptoController {
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public User login(@RequestBody User user, HttpSession session) throws Exception {
-        if (!PasswordStorage.verifyPassword(user.getPasswordHash(), users.findOne(user.getId()).getPasswordHash())){
+        if (!PasswordStorage.verifyPassword(user.getPasswordHash(), users.findFirstByName(user.getName()).getPasswordHash())){
             user = users.findOne(user.getId());
             session.setAttribute("user", user);
         }else{
