@@ -1,13 +1,13 @@
 user {
 id
 username
-password
+passwordHash
 }
 
 cryptogram {
 id
 scramble
-username
+sender
 recipient
 timestamp
 message
