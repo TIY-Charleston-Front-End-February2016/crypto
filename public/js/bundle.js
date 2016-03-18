@@ -1,0 +1,1 @@
+console.error("Error: Cannot find module './modelView' from '/Users/MyFolder/demos/crypto/public/js'");
