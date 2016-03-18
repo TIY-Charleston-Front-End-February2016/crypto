@@ -19,6 +19,10 @@
 >>>>>>> 08a9cd9df685c4bad47dce9767c0946788e849a4
       <div class="panel panel-info">
         <div class="panel-heading">Messages Homepage</div>
+        <div class="messagesAppend">
+
+
+        <!-- message collection append here -->
         <div class="message panel-body">
           <h5>username</h5>
           <p>message hint</p>
@@ -35,14 +39,18 @@
             <button type="button" class="btn btn-default" name="destroy"><span class="glyphicon glyphicon-trash"></span></button>
           </div>
         </div>
+
+      </div>
       </div>
     </div>
 
     <div class="sendMsg col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
       <div class="panel panel-warning">
         <div class="panel-heading">Send Encrypted Message</div>
-          <div class="message panel-body">
-            <form class="decrypt" role="form" action="index.html" method="post">
+          <div class="sendMsgBody panel-body">
+
+            <!-- send form appends here -->
+            <form class="encrypt" role="form" action="index.html" method="post">
               <div class="form-group">
                 <input type="text" class="form-control recipient" name="recipient" placeholder="username">
               </div>
@@ -53,10 +61,12 @@
                 <input type="text" class="form-control message" name="message" placeholder="message">
               </div>
               <div class="btn-group sendMsgBtns">
-                <button type="submit" class="btn btn-info sendMsg">Submit</button>
+                <button type="submit" class="btn btn-info sendMsg">Send</button>
                 <button type="button" class="btn btn-warning back">Back</button>
               </div>
             </form>
+
+
           </div>
         </div>
       </div>
@@ -65,20 +75,26 @@
     <div class="decryptMsg col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
       <div class="panel panel-success">
         <div class="panel-heading">Decrypt Message</div>
-        <div class="message panel-body">
-          <h4>Rando Encrypted Message</h4>
-        </div>
-          <div class="message panel-body">
-            <form class="decrypt" role="form" action="index.html" method="post">
-              <div class="form-group">
-                <input type="text" class="form-control" name="input" placeholder="">
+          <div class="appendGame">
+
+        <!-- game play appends here -->
+            <div class="encryption panel-body">
+              <h4 class="scramble">Rando Encrypted Message</h4>
+            </div>
+              <div class="message panel-body">
+                <form class="decrypt" role="form" action="index.html" method="post">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
+                  </div>
+                  <div class="btn-group decryptBtns">
+                    <button type="submit" class="btn btn-info sendMsg">Send</button>
+                    <button type="button" class="btn btn-warning back">Back</button>
+                    <button type="button" class="btn btn-danger giveUp">Give Up</button>
+                  </div>
+                </form>
               </div>
-              <div class="btn-group decryptBtns">
-                <button type="submit" class="btn btn-info sendMsg">Send</button>
-                <button type="submit" class="btn btn-warning back">Back</button>
-                <button type="button" class="btn btn-danger giveUp">Give Up</button>
-              </div>
-            </form>
+
+
           </div>
         </div>
       </div>

@@ -20,12 +20,14 @@ div.message {
   div.message .msgBtns {
     float: right; }
 
-div.sendMsg .sendMsgBtns {
+.sendMsgBtns {
   float: right; }
 
-div.decryptMsg h4.scramble {
-  text-align: center;
-  border-style: none; }
+div.decryptMsg div.encryption {
+  border: none; }
+  div.decryptMsg div.encryption h4.scramble {
+    text-align: center;
+    border-style: none; }
 
 div.decryptMsg .decryptBtns {
   float: right; }
