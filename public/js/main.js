@@ -3,10 +3,15 @@ var Backbone = require('backbone');
 var UserCollection = require('./usercollection');
 var UserCollectionView = require('./usercollectionview');
 var AddUserView = require('./adduserview');
+var MsgView = require('./sendMessageView');
 
 $(document).ready(function(){
-  // var finalBitterCol = new BitterCollection();
+  // var finalBitterCo
+  // l = new BitterCollection();
   new AddUserView();
+
+  var msgView = new MsgView({})
+  msgView.render();
   console.log('helloo');
   // $(.navbar).append('<h3>' + 'hellow' + '</h3>');
 

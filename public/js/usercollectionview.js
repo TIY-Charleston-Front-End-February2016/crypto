@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl = require('./templates');
-var ModelView = require('./modelView');
+var ModelView = require('./usermodelview');
 // model view
 module.exports = Backbone.View.extend({
   el: '.content',

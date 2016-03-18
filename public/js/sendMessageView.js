@@ -10,15 +10,20 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     console.log('send message view initted');
   },
-  events: function(){
-    'submit .sendMsg': 'sendMsg',
-    'click .back': 'goBack'
+  events: function() {
+    // 'submit .sendMsg': 'sendMsg',
+    // 'click .back': 'goBack'
   },
   addOne: function(){
-    var markup = this.template(this.model.toJSON());
-    console.log(markup);
+    var markup = this.template();
+    console.log("TEST", markup);
     this.$el.html(markup);
     return this;
   },
-  render: function(){}
+  render: function(){
+    var markup = this.template();
+    console.log("TEST", markup);
+    this.$el.html(markup);
+    return this;
+  }
 });
