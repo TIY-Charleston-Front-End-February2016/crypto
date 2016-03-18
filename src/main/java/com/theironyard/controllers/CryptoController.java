@@ -37,24 +37,24 @@ public class CryptoController {
         }
     }
 
-    @RequestMapping(path = "/user", method = RequestMethod.GET)
+    @RequestMapping(path = "/users", method = RequestMethod.GET)
     public List<User> getUsers(){
         return (List<User>) users.findAll();
     }
-    @RequestMapping(path = "/user", method = RequestMethod.POST)
+    @RequestMapping(path = "/users", method = RequestMethod.POST)
     public void addUser(@RequestBody User user) throws PasswordStorage.CannotPerformOperationException {
         user.setPasswordHash(PasswordStorage.createHash(user.getPasswordHash()));
         users.save(user);
     }
-    @RequestMapping(path = "/user/{id}", method = RequestMethod.PUT )
-    public void editUser(@RequestBody User user, @PathVariable("id") int id){
+    @RequestMapping(path = "/users/{id}", method = RequestMethod.PUT )
+    public void editUser(@RequestBody User user, @PathVariable("id") int id, HttpSession session){
         users.save(user);
     }
-    @RequestMapping(path = "/user/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable("id") int id){
         users.delete(id);
     }
-    @RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/users/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable("id") int id){
         return users.findOne(id);
     }
