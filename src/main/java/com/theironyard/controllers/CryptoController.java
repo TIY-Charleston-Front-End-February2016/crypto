@@ -1,5 +1,6 @@
 package com.theironyard.controllers;
 
+import com.theironyard.entities.Cryptogram;
 import com.theironyard.entities.User;
 import com.theironyard.services.CryptogramRepository;
 import com.theironyard.services.UserRepository;
@@ -13,8 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by PiratePowWow on 3/17/16.
@@ -72,5 +72,65 @@ public class CryptoController {
     public void logout(HttpSession session){
         session.invalidate();
     }
+    @RequestMapping(path = "/cryptograms", method = RequestMethod.GET)
+    public List<Cryptogram> getCryptograms(){
+        return (List<Cryptogram>) cryptograms.findAll();
+    }
+    @RequestMapping(path = "/cryptograms/{sender_id}", method = RequestMethod.GET)
+    public List<Cryptogram> getSenderCryptograms(@PathVariable("sender_id") int id){
+        return cryptograms.findBySender(users.findOne(id));
+    }
+    @RequestMapping(path = "/cryptograms/{recipient_id}", method = RequestMethod.GET)
+    public List<Cryptogram> getRecipientCryptograms(@PathVariable("recipient_id") int id){
+        return cryptograms.findByRecipient(users.findOne(id));
+    }
+    @RequestMapping(path = "/cryptograms", method = RequestMethod.POST)
+    public void addCryptogram(@RequestBody Cryptogram cryptogram){
+        cryptogram.setScramble(generateScramble(cryptogram));
+        cryptograms.save(cryptogram);
+    }
+    @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.PUT)
+    public void editCryptogram(@RequestBody Cryptogram cryptogram, @PathVariable("id") int id){
+        cryptograms.save(cryptogram);
+    }
+    @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.DELETE)
+    public void deleteCryptogram(@PathVariable("id") int id){
+        cryptograms.delete(id);
+    }
+    @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.GET)
+    public Cryptogram getCryptogram(@PathVariable("id") int id){
+        return cryptograms.findOne(id);
+    }
+    public String generateScramble(Cryptogram newCryptogram){
+        String originalMessage = newCryptogram.getOriginalMessage().toLowerCase();
+        String[] alphabetPrim ={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+        ArrayList<String> alphabet = new ArrayList<>(Arrays.asList(alphabetPrim));
+        HashMap<String, String> cipher = new HashMap<>();
+        int a;
+        for(a = 0;a < alphabet.size();a++){
+            cipher.put(alphabet.get(a), "");
+        }
+        for (String letter: cipher.keySet()){
+            Random random = new Random();
+            int rand = random.nextInt(alphabet.size());
+            cipher.put(letter, alphabet.get(rand));
+            alphabet.remove(alphabet.get(rand));
+        }
+        int i;
+        ArrayList<String> cryptogramArr = new ArrayList();
+        for(i = 0;i < originalMessage.length();i++){
+            if(originalMessage.charAt(i)!=' '){
+                cryptogramArr.add(String.valueOf(cipher.get(String.valueOf(originalMessage.charAt(i))).charAt(0)));
+            }else{
+                cryptogramArr.add(" ");
+            }
+        }
+        String cryptogram = "";
+        for(String l:cryptogramArr){
+            cryptogram += l;
+        }
+        System.out.println(cryptogram);
 
+        return cryptogram;
+    }
 }
