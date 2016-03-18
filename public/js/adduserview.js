@@ -26,7 +26,7 @@ module.exports = Backbone.View.extend({
     evt.preventDefault();
     var newUser = {
       name: this.$el.find('input[name="usernameC"]').val(),
-      password: this.$el.find('input[name="passwordC"]').val(),
+      passwordHash: this.$el.find('input[name="passwordC"]').val(),
 
     };
     var newUserModel = new userModel(newUser);
