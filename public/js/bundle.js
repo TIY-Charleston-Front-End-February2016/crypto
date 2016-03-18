@@ -27,7 +27,7 @@ module.exports = Backbone.View.extend({
     evt.preventDefault();
     var newUser = {
       name: this.$el.find('input[name="usernameC"]').val(),
-      password: this.$el.find('input[name="passwordC"]').val(),
+      passwordHash: this.$el.find('input[name="passwordC"]').val(),
 
     };
     var newUserModel = new userModel(newUser);
@@ -222,7 +222,7 @@ var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
   urlRoot: '/users',
   initialize: function () {
-    console.log("user model has been created.");
+    // console.log("user model has been created.");
   }
 });
 
