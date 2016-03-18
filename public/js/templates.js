@@ -36,7 +36,7 @@ var templates = {
             <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
           </div>
           <div class="btn-group decryptBtns">
-            <button type="submit" class="btn btn-info sendMsg">Send</button>
+            <button type="submit" class="btn btn-info submit">Submit</button>
             <button type="button" class="btn btn-warning back">Back</button>
             <button type="button" class="btn btn-danger giveUp">Give Up</button>
           </div>
