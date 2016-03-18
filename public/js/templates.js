@@ -1,8 +1,8 @@
 var templates = {
   message: [
     `<div class="message panel-body">
-      <h5>username</h5>
-      <p>message hint</p>
+      <h5><%= username %></h5>
+      <p><%= hint %></p>
       <div class="btn-group msgBtns">
         <button type="button" class="btn btn-default" name="play"><span class="glyphicon glyphicon-play"></span></button>
         <button type="button" class="btn btn-default" name="destroy"><span class="glyphicon glyphicon-trash"></span></button>
@@ -28,7 +28,7 @@ var templates = {
   ].join(''),
   gamePage: [
     `<div class="encryption panel-body">
-      <h4 class="scramble">Rando Encrypted Message</h4>
+      <h4 class="scramble"><%= scramble %></h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">
@@ -36,7 +36,7 @@ var templates = {
             <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
           </div>
           <div class="btn-group decryptBtns">
-            <button type="submit" class="btn btn-info sendMsg">Send</button>
+            <button type="submit" class="btn btn-info submit">Submit</button>
             <button type="button" class="btn btn-warning back">Back</button>
             <button type="button" class="btn btn-danger giveUp">Give Up</button>
           </div>
