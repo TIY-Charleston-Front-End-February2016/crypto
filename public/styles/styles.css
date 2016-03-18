@@ -1,0 +1,31 @@
+* button {
+  background-color: inherit; }
+  * button span {
+    background-color: inherit;
+    color: #000000; }
+
+nav {
+  background-color: #1098F7; }
+  nav div {
+    background-color: inherit; }
+    nav div form {
+      background-color: inherit; }
+
+div.message {
+  border-bottom: .5px solid #bce8f1; }
+  div.message h5 {
+    display: inline-block; }
+  div.message p {
+    display: inline-block; }
+  div.message .msgBtns {
+    float: right; }
+
+div.sendMsg .sendMsgBtns {
+  float: right; }
+
+div.decryptMsg h4.scramble {
+  text-align: center;
+  border-style: none; }
+
+div.decryptMsg .decryptBtns {
+  float: right; }

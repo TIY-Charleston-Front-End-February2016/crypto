@@ -1,0 +1,54 @@
+* {
+  // background-color: #000000;
+  // color: #FFFFFF;
+  button {
+    background-color: inherit;
+    span {
+      background-color: inherit;
+      color: #000000;
+    }
+  }
+}
+
+nav {
+  background-color: #1098F7;
+  div {
+    background-color: inherit;
+    form {
+      background-color: inherit;
+    }
+  }
+}
+
+.homepage {
+
+}
+
+div.message {
+  border-bottom: .5px solid #bce8f1;
+  h5 {
+    display: inline-block;
+  }
+  p {
+    display: inline-block;
+  }
+  .msgBtns {
+    float: right;
+  }
+}
+
+div.sendMsg {
+  .sendMsgBtns {
+    float: right;
+  }
+}
+
+div.decryptMsg {
+  h4.scramble {
+    text-align: center;
+    border-style: none;
+  }
+  .decryptBtns {
+    float: right;
+  }
+}
