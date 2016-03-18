@@ -1,12 +1,15 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
-var myTmpl = require('./templates');
+var tmpl = require('./templates');
 var _ = require('underscore');
 var userModel = require('./usermodel')
 module.exports = Backbone.View.extend({
-  el: '.content',
-  template: myTmpl.addTweet,
+  el: '.navbar',
+  template: _.template(tmpl.addUser),
   initialize: function () {
+    console.log("I WAS CALLED", this.$el);
+  //  console.log(myTmpl);
+   console.log(this.template);
     this.$el.append(this.render());
 
 
@@ -17,18 +20,18 @@ module.exports = Backbone.View.extend({
     return this;
   },
   events: {
-    'click .create': 'createBitter'
+    'click .create': 'addUser'
   },
-  createBitter: function(evt){
+  addUser: function(evt){
     evt.preventDefault();
-    var newBitter = {
-      title: this.$el.find('input[name="title"]').val(),
-      user: this.$el.find('input[name="user"]').val(),
-      desc: this.$el.find('input[name="desc"]').val(),
+    var newUser = {
+      name: this.$el.find('input[name="usernameC"]').val(),
+      password: this.$el.find('input[name="passwordC"]').val(),
+
     };
-    var newBitterModel = new bitterModel(newBitter);
+    var newUserModel = new userModel(newUser);
     this.$el.find('input').val('');
-    newBitterModel.save();
+    newUserModel.save();
     this.listenTo(this.collection, 'add', this.addAll);
   },
 
