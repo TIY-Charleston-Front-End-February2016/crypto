@@ -32,10 +32,7 @@ templates.userModel =[
   </div>`
 ].join('');
 
-module.exports = templates;
-=======
-var templates = {
-  message: [
+  templates.message= [
     `<div class="message panel-body">
       <h5><%= username %></h5>
       <p><%= hint %></p>
@@ -44,8 +41,8 @@ var templates = {
         <button type="button" class="btn btn-default" name="destroy"><span class="glyphicon glyphicon-trash"></span></button>
       </div>
     </div>`
-  ].join.(''),
-  sendMsgForm: [
+  ].join('');
+  templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
       <div class="form-group">
         <input type="text" class="form-control recipient" name="recipient" placeholder="username">
@@ -61,8 +58,8 @@ var templates = {
         <button type="button" class="btn btn-warning back">Back</button>
       </div>
     </form>`
-  ].join(''),
-  gamePage: [
+  ].join('');
+  templates.gamePage= [
     `<div class="encryption panel-body">
       <h4 class="scramble"><%= scramble %></h4>
     </div>
@@ -78,5 +75,6 @@ var templates = {
           </div>
         </form>
       </div>`
-  ].join('')
-}
+  ].join('');
+
+  module.exports = templates;
