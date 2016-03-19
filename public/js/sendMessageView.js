@@ -17,8 +17,8 @@ module.exports = Backbone.View.extend({
     this.$el.html(markup);
     return this;
   },
-  events: function() {
-    'click .sendMsg': 'createCrypto'
+  events: {
+    'click .sendMsg': 'createCrypto',
     // 'click .back': 'goBack'
   },
   createCrypto: function(evt){
@@ -26,9 +26,10 @@ module.exports = Backbone.View.extend({
   var newCrypto = {
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
-    message: this.$el.find('.message').val(),
+    originalMessage: this.$el.find('.message').val(),
   };
   var newMsgModel = new messageModel(newCrypto);
+  window.glob = newMsgModel;
   this.$el.find('input').val('');
   newMsgModel.save();
   this.listenTo(this.collection, 'add', this.addAll);

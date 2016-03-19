@@ -7,7 +7,7 @@ module.exports = Backbone.View.extend({
   el: '.appendGame',
   template: _.template(tmpl.gamePage),
   initialize: function(){},
-  events: function(){
+  events: {
     'submit .submit': 'submitAnswer',
     'click .back': 'goBack',
     'click .giveUp': 'giveUp'
