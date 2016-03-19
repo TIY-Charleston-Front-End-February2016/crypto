@@ -24,15 +24,16 @@ module.exports = Backbone.View.extend({
   createCrypto: function(evt){
   evt.preventDefault();
   var newCrypto = {
-    id: null,
-    scramble: null,
-    sender: null,
-    isSolved: null,
-    timeStamp: null,
+
+
+    sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
+
+    timeStamp: new Date(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
+  console.log('NANENAENRFRANEN', newCrypto);
   var newMsgModel = new messageModel(newCrypto);
   window.glob = newMsgModel;
   // this.$el.find('input').val('');

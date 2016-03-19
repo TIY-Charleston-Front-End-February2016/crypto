@@ -36,7 +36,11 @@ module.exports = Backbone.View.extend({
     };
     var newUserModel = new userModel(newUser);
     this.$el.find('input').val('');
-    newUserModel.save();
+    newUserModel.save({},{
+      success: function(model, response){
+        console.log('logged in user' + response)
+      }
+    });
     this.listenTo(this.collection, 'add', this.addAll);
     var markup = this.templateUser(newUser)
     this.$el.html(markup);
@@ -86,19 +90,16 @@ var MsgCollectionView = require('./messageCollectionView');
 var AddMsgView = require('./sendMessageView');
 
 $(document).ready(function(){
-  // var finalBitterCo
-  // l = new BitterCollection();
+
   new AddUserView();
 
   new AddMsgView();
-  // var msgView = new MsgView({})
-  // msgView.render();
-  // console.log('helloo');
-  // $(.navbar).append('<h3>' + 'hellow' + '</h3>');
+  // var sightings = new Collection();
+  // sightings.fetch().then(function (data) {
+  //   new CollectionView({collection: sightings});
+  //   var addSightingForm = new FormView({collection: sightings});
+  //   $('.col-md-4').html(addSightingForm.render().el);
 
-  // finalBitterCol.fetch().then(function(data){
-  //   var collection = new BitterCollection(data);
-  //   new BitterCollectionView({collection: collection});
 
 });
 
@@ -203,15 +204,16 @@ module.exports = Backbone.View.extend({
   createCrypto: function(evt){
   evt.preventDefault();
   var newCrypto = {
-    id: null,
-    scramble: null,
-    sender: null,
-    isSolved: null,
-    timeStamp: null,
+
+
+    sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
+
+    timeStamp: new Date(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
+  console.log('NANENAENRFRANEN', newCrypto);
   var newMsgModel = new messageModel(newCrypto);
   window.glob = newMsgModel;
   // this.$el.find('input').val('');
@@ -248,7 +250,7 @@ templates.addUser = [
 
 
 templates.userModel =[
-  `<div class="container-fluid welcome"><h1>Welcome, <%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
+  `<div class="container-fluid welcome"><h1><%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
     <div class="container-fluid navbar-right">
       <button type="button" class="btn btn-default send">Send Message</button>
     </div>
