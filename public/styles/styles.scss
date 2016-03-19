@@ -20,6 +20,11 @@ nav {
   }
 }
 
+input.recipient {
+  width: 200px;
+  display: inline-block;
+}
+
 div.message {
   border-bottom: .5px solid #bce8f1;
   h5 {
