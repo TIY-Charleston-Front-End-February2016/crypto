@@ -24,10 +24,10 @@ module.exports = Backbone.View.extend({
   createCrypto: function(evt){
   evt.preventDefault();
   var newCrypto = {
-    id: null,
-    scramble: null,
+
+
     sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
-    isSolved: null,
+
     timeStamp: new Date(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),

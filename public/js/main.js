@@ -8,18 +8,15 @@ var MsgCollectionView = require('./messageCollectionView');
 var AddMsgView = require('./sendMessageView');
 
 $(document).ready(function(){
-  // var finalBitterCo
-  // l = new BitterCollection();
+
   new AddUserView();
 
   new AddMsgView();
-  // var msgView = new MsgView({})
-  // msgView.render();
-  // console.log('helloo');
-  // $(.navbar).append('<h3>' + 'hellow' + '</h3>');
+  // var sightings = new Collection();
+  // sightings.fetch().then(function (data) {
+  //   new CollectionView({collection: sightings});
+  //   var addSightingForm = new FormView({collection: sightings});
+  //   $('.col-md-4').html(addSightingForm.render().el);
 
-  // finalBitterCol.fetch().then(function(data){
-  //   var collection = new BitterCollection(data);
-  //   new BitterCollectionView({collection: collection});
 
 });
