@@ -17,3 +17,12 @@ String hint:
 Boolean isSolved:
 }
 
+//Use this object to create a cryptogram
+CryptogramDto{
+    String originalMessage;
+    String hint;
+    String sender;
+    String recipient;
+    String timeStamp;
+}
+
