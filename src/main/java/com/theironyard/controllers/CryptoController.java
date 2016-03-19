@@ -1,5 +1,6 @@
 package com.theironyard.controllers;
 
+import com.theironyard.dataTransferObjects.CryptogramDto;
 import com.theironyard.entities.Cryptogram;
 import com.theironyard.entities.User;
 import com.theironyard.services.CryptogramRepository;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -85,12 +87,10 @@ public class CryptoController {
         return cryptograms.findByRecipient(users.findOne(id));
     }
     @RequestMapping(path = "/cryptograms", method = RequestMethod.POST)
-    public void addCryptogram(@RequestBody Cryptogram cryptogram){
-        User sender = users.findFirstByName(cryptogram.getSender().getName());
-        User recipient = users.findFirstByName((cryptogram.getRecipient().getName()));
-        cryptogram.setSender(sender);
-        cryptogram.setRecipient(recipient);
-        cryptogram.setScramble(generateScramble(cryptogram));
+    public void addCryptogram(@RequestBody CryptogramDto cryptogramDto){
+        User sender = users.findFirstByName(cryptogramDto.getSender());
+        User recipient = users.findFirstByName((cryptogramDto.getRecipient()));
+        Cryptogram cryptogram = new Cryptogram(generateScramble(cryptogramDto), cryptogramDto.getOriginalMessage(), cryptogramDto.getHint(), sender, recipient, false, LocalDateTime.parse(cryptogramDto.getTimeStamp()));
         cryptograms.save(cryptogram);
     }
     @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.PUT)
@@ -105,8 +105,8 @@ public class CryptoController {
     public Cryptogram getCryptogram(@PathVariable("id") int id){
         return cryptograms.findOne(id);
     }
-    public String generateScramble(Cryptogram newCryptogram){
-        String originalMessage = newCryptogram.getOriginalMessage().toLowerCase();
+    public String generateScramble(CryptogramDto cryptogramDto){
+        String originalMessage = cryptogramDto.getOriginalMessage().toLowerCase();
         String[] alphabetPrim ={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
         ArrayList<String> alphabet = new ArrayList<>(Arrays.asList(alphabetPrim));
         HashMap<String, String> cipher = new HashMap<>();
