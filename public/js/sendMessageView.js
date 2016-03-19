@@ -26,13 +26,14 @@ module.exports = Backbone.View.extend({
   var newCrypto = {
     id: null,
     scramble: null,
-    sender: null,
+    sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
     isSolved: null,
-    timeStamp: null,
+    timeStamp: new Date(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
+  console.log('NANENAENRFRANEN', newCrypto);
   var newMsgModel = new messageModel(newCrypto);
   window.glob = newMsgModel;
   // this.$el.find('input').val('');

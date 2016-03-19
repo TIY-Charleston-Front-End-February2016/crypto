@@ -36,7 +36,11 @@ module.exports = Backbone.View.extend({
     };
     var newUserModel = new userModel(newUser);
     this.$el.find('input').val('');
-    newUserModel.save();
+    newUserModel.save({},{
+      success: function(model, response){
+        console.log('logged in user' + response)
+      }
+    });
     this.listenTo(this.collection, 'add', this.addAll);
     var markup = this.templateUser(newUser)
     this.$el.html(markup);
@@ -205,13 +209,14 @@ module.exports = Backbone.View.extend({
   var newCrypto = {
     id: null,
     scramble: null,
-    sender: null,
+    sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
     isSolved: null,
-    timeStamp: null,
+    timeStamp: new Date(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
+  console.log('NANENAENRFRANEN', newCrypto);
   var newMsgModel = new messageModel(newCrypto);
   window.glob = newMsgModel;
   // this.$el.find('input').val('');
@@ -248,7 +253,7 @@ templates.addUser = [
 
 
 templates.userModel =[
-  `<div class="container-fluid welcome"><h1>Welcome, <%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
+  `<div class="container-fluid welcome"><h1><%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
     <div class="container-fluid navbar-right">
       <button type="button" class="btn btn-default send">Send Message</button>
     </div>

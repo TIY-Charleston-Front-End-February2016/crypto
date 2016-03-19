@@ -35,7 +35,11 @@ module.exports = Backbone.View.extend({
     };
     var newUserModel = new userModel(newUser);
     this.$el.find('input').val('');
-    newUserModel.save();
+    newUserModel.save({},{
+      success: function(model, response){
+        console.log('logged in user' + response)
+      }
+    });
     this.listenTo(this.collection, 'add', this.addAll);
     var markup = this.templateUser(newUser)
     this.$el.html(markup);
