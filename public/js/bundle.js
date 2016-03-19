@@ -108,11 +108,12 @@ var messageModel = require('./messageModel');
 
 module.exports = Backbone.Collection.extend({
   model: messageModel,
-  cryptoUrl: '/cryptograms',
+  url: '/cryptograms',
   initialize: function(){
     console.log('message collection initted');
 
   }
+
 });
 
 },{"./messageModel":6,"backbone":14}],5:[function(require,module,exports){
@@ -145,11 +146,11 @@ module.exports = Backbone.View.extend({
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlCryptoRoot: '/cryptograms',
+  urlRoot: '/cryptograms',
   initialize: function(){
     console.log('message model created');
   }
-})
+});
 
 },{"backbone":14}],7:[function(require,module,exports){
 var Backbone = require('backbone');
@@ -202,13 +203,18 @@ module.exports = Backbone.View.extend({
   createCrypto: function(evt){
   evt.preventDefault();
   var newCrypto = {
+    id: null,
+    scramble: null,
+    sender: null,
+    isSolved: null,
+    timeStamp: null,
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
   var newMsgModel = new messageModel(newCrypto);
   window.glob = newMsgModel;
-  this.$el.find('input').val('');
+  // this.$el.find('input').val('');
   newMsgModel.save();
   this.listenTo(this.collection, 'add', this.addAll);
 },
