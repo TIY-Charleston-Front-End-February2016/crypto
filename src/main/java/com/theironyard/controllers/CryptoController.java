@@ -90,7 +90,7 @@ public class CryptoController {
     public void addCryptogram(@RequestBody CryptogramDto cryptogramDto){
         User sender = users.findFirstByName(cryptogramDto.getSender());
         User recipient = users.findFirstByName((cryptogramDto.getRecipient()));
-        Cryptogram cryptogram = new Cryptogram(generateScramble(cryptogramDto), cryptogramDto.getOriginalMessage(), cryptogramDto.getHint(), sender, recipient, false, LocalDateTime.parse(cryptogramDto.getTimeStamp()));
+        Cryptogram cryptogram = new Cryptogram(generateScramble(cryptogramDto), cryptogramDto.getOriginalMessage(), cryptogramDto.getHint(), sender, recipient, false, LocalDateTime.now());
         cryptograms.save(cryptogram);
     }
     @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.PUT)

@@ -1,13 +1,5 @@
 package com.theironyard.dataTransferObjects;
 
-import com.theironyard.entities.User;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-
 /**
  * Created by PiratePowWow on 3/19/16.
  */
@@ -16,14 +8,15 @@ public class CryptogramDto {
     String hint;
     String sender;
     String recipient;
-    String timeStamp;
 
-    public CryptogramDto(String originalMessage, String hint, String sender, String recipient, String timeStamp) {
+    public CryptogramDto(String originalMessage, String hint, String sender, String recipient) {
         this.originalMessage = originalMessage;
         this.hint = hint;
         this.sender = sender;
         this.recipient = recipient;
-        this.timeStamp = timeStamp;
+    }
+
+    public CryptogramDto() {
     }
 
     public String getOriginalMessage() {
@@ -56,13 +49,5 @@ public class CryptogramDto {
 
     public void setRecipient(String recipient) {
         this.recipient = recipient;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
     }
 }
