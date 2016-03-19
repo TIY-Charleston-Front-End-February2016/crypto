@@ -22,6 +22,10 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public User(String name){
+        this.name = name;
+    }
+
     public User() {
     }
 
