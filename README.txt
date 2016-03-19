@@ -16,3 +16,4 @@ String originalMessage:
 String hint:
 Boolean isSolved:
 }
+

@@ -60,7 +60,7 @@ public class CryptoController {
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public User login(@RequestBody User user, HttpSession session) throws Exception {
-        if (!PasswordStorage.verifyPassword(user.getPasswordHash(), users.findFirstByName(user.getName()).getPasswordHash())){
+        if (PasswordStorage.verifyPassword(user.getPasswordHash(), users.findFirstByName(user.getName()).getPasswordHash())){
             user = users.findOne(user.getId());
             session.setAttribute("user", user);
         }else{
@@ -86,6 +86,10 @@ public class CryptoController {
     }
     @RequestMapping(path = "/cryptograms", method = RequestMethod.POST)
     public void addCryptogram(@RequestBody Cryptogram cryptogram){
+        User sender = users.findFirstByName(cryptogram.getSender().getName());
+        User recipient = users.findFirstByName((cryptogram.getRecipient().getName()));
+        cryptogram.setSender(sender);
+        cryptogram.setRecipient(recipient);
         cryptogram.setScramble(generateScramble(cryptogram));
         cryptograms.save(cryptogram);
     }
