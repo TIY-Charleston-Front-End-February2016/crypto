@@ -25,7 +25,7 @@ templates.addUser = [
 
 
 templates.userModel =[
-  `<div class="container-fluid welcome"><h1>Welcome, <%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
+  `<div class="container-fluid welcome"><h1><%= name %> </h1> <button type="button" class="btn btn-danger logout">log out</button>
     <div class="container-fluid navbar-right">
       <button type="button" class="btn btn-default send">Send Message</button>
     </div>
