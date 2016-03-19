@@ -3,10 +3,12 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
-var userModel = require('./usermodel')
+var userModel = require('./usermodel');
+var loginModel = require('./loginmodel');
 module.exports = Backbone.View.extend({
   el: '.navbar',
   template: _.template(tmpl.addUser),
+  templateUser: _.template(tmpl.userModel),
   initialize: function () {
     console.log("I WAS CALLED", this.$el);
   //  console.log(myTmpl);
@@ -21,7 +23,9 @@ module.exports = Backbone.View.extend({
     return this;
   },
   events: {
-    'click .create': 'addUser'
+    'click .create': 'addUser',
+    'click .login': 'logIn',
+    'click .logout': 'logOut'
   },
   addUser: function(evt){
     evt.preventDefault();
@@ -34,26 +38,62 @@ module.exports = Backbone.View.extend({
     this.$el.find('input').val('');
     newUserModel.save();
     this.listenTo(this.collection, 'add', this.addAll);
+    var markup = this.templateUser(newUser)
+    this.$el.html(markup);
   },
+
+  logIn: function(evt){
+    evt.preventDefault();
+    var exsistingUser = {
+      name: this.$el.find('input[name="username"]').val(),
+      passwordHash: this.$el.find('input[name="password"]').val(),
+
+    };
+    var newExistingModel = new loginModel(exsistingUser);
+    this.$el.find('input').val('');
+    newExistingModel.save();
+    this.listenTo(this.collection, 'add', this.addAll);
+    var markup = this.templateUser(exsistingUser)
+    this.$el.html(markup);
+  },
+
+  logOut: function(evt){
+    evt.preventDefault();
+    var markup = this.template;
+    this.$el.html(markup);
+  },
+
 
 });
 
-},{"./templates":5,"./usermodel":8,"backbone":10,"jquery":11,"underscore":12}],2:[function(require,module,exports){
+},{"./loginmodel":2,"./templates":9,"./usermodel":12,"backbone":14,"jquery":15,"underscore":16}],2:[function(require,module,exports){
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
+  urlRoot: '/login',
+  initialize: function () {
+    // console.log("user model has been created.");
+  }
+});
+
+},{"backbone":14}],3:[function(require,module,exports){
 var $ = require('jquery');
 var Backbone = require('backbone');
 var UserCollection = require('./usercollection');
 var UserCollectionView = require('./usercollectionview');
 var AddUserView = require('./adduserview');
-var MsgView = require('./sendMessageView');
+var MsgCollection = require('./messageCollection');
+var MsgCollectionView = require('./messageCollectionView');
+var AddMsgView = require('./sendMessageView');
 
 $(document).ready(function(){
   // var finalBitterCo
   // l = new BitterCollection();
   new AddUserView();
 
-  var msgView = new MsgView({})
-  msgView.render();
-  console.log('helloo');
+  new AddMsgView();
+  // var msgView = new MsgView({})
+  // msgView.render();
+  // console.log('helloo');
   // $(.navbar).append('<h3>' + 'hellow' + '</h3>');
 
   // finalBitterCol.fetch().then(function(data){
@@ -62,17 +102,81 @@ $(document).ready(function(){
 
 });
 
-},{"./adduserview":1,"./sendMessageView":4,"./usercollection":6,"./usercollectionview":7,"backbone":10,"jquery":11}],3:[function(require,module,exports){
+},{"./adduserview":1,"./messageCollection":4,"./messageCollectionView":5,"./sendMessageView":8,"./usercollection":10,"./usercollectionview":11,"backbone":14,"jquery":15}],4:[function(require,module,exports){
+var Backbone = require('backbone');
+var messageModel = require('./messageModel');
+
+module.exports = Backbone.Collection.extend({
+  model: messageModel,
+  url: '/cryptograms',
+  initialize: function(){
+    console.log('message collection initted');
+
+  }
+
+});
+
+},{"./messageModel":6,"backbone":14}],5:[function(require,module,exports){
+var Backbone = require('backbone');
+var tmpl = require('./templates');
+var _ = require('underscore');
+var $ =require('jquery');
+var messageModelView = require('./messageModelView');
+
+module.exports = Backbone.View.extend({
+  el: '.messagesAppend',
+  initialize: function(){
+    console.log('message collection view initted');
+    this.addAll();
+  },
+  addOne: function(el){
+    var modelView = new messageModelView({model: el});
+    console.log(modelView);
+    this.$el.append(modelView.render().el);
+  },
+  addAll: function(){
+    this.$el.html('');
+    console.log(this.collection);
+    window.glob1 = this.collection;
+    _.each(this.collection.models, this.addOne, this);
+  }
+})
+
+},{"./messageModelView":7,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],6:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
   urlRoot: '/cryptograms',
   initialize: function(){
-    console.log('message model initted');
+    console.log('message model created');
   }
-})
+});
 
-},{"backbone":10}],4:[function(require,module,exports){
+},{"backbone":14}],7:[function(require,module,exports){
+var Backbone = require('backbone');
+var tmpl = require('./templates');
+var _ = require('underscore');
+var $ = require('jquery');
+
+module.exports = Backbone.View.extend({
+  el: '.appendGame',
+  template: _.template(tmpl.gamePage),
+  initialize: function(){},
+  events: {
+    'submit .submit': 'submitAnswer',
+    'click .back': 'goBack',
+    'click .giveUp': 'giveUp'
+  },
+  addOne: function(){
+    var markup = this.template(this.model.toJSON());
+    console.log(markup);
+    this.$el.html(markup);
+    return this;
+  },
+  render: function(){}
+});
+
+},{"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
@@ -84,26 +188,39 @@ module.exports = Backbone.View.extend({
   template: _.template(tmpl.sendMsgForm),
   initialize: function(){
     console.log('send message view initted');
-  },
-  events: function() {
-    // 'submit .sendMsg': 'sendMsg',
-    // 'click .back': 'goBack'
-  },
-  addOne: function(){
-    var markup = this.template();
-    console.log("TEST", markup);
-    this.$el.html(markup);
-    return this;
+    this.$el.append(this.render());
   },
   render: function(){
     var markup = this.template();
     console.log("TEST", markup);
     this.$el.html(markup);
     return this;
-  }
+  },
+  events: {
+    'click .sendMsg': 'createCrypto',
+    // 'click .back': 'goBack'
+  },
+  createCrypto: function(evt){
+  evt.preventDefault();
+  var newCrypto = {
+    id: null,
+    scramble: null,
+    sender: null,
+    isSolved: null,
+    timeStamp: null,
+    recipient: this.$el.find('.recipient').val(),
+    hint: this.$el.find('.hint').val(),
+    originalMessage: this.$el.find('.message').val(),
+  };
+  var newMsgModel = new messageModel(newCrypto);
+  window.glob = newMsgModel;
+  // this.$el.find('input').val('');
+  newMsgModel.save();
+  this.listenTo(this.collection, 'add', this.addAll);
+},
 });
 
-},{"./messageModel":3,"./templates":5,"backbone":10,"jquery":11,"underscore":12}],5:[function(require,module,exports){
+},{"./messageModel":6,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],9:[function(require,module,exports){
 var templates = {};
 templates.addUser = [
 
@@ -111,7 +228,7 @@ templates.addUser = [
     <form class="form-inline" role="form" action="index.html" method="post">
       <div class="form-group">
         <input type="text" class="form-control username" name="username" placeholder="username">
-        <input type="text" class="form-control password" name="password" placeholder="password">
+        <input type="password" class="form-control password" name="password" placeholder="password">
       </div>
       <button type="submit" class="btn btn-info login">Login</button>
     </form>
@@ -120,7 +237,7 @@ templates.addUser = [
     <form class="form-inline" role="form" action="index.html" method="post">
       <div class="form-group">
         <input type="text" class="form-control username" name="usernameC" placeholder="username">
-        <input type="text" class="form-control password" name="passwordC" placeholder="password">
+        <input type="password" class="form-control password" name="passwordC" placeholder="password">
       </div>
       <button type="submit" class="btn btn-warning create">Create User</button>
     </form>
@@ -160,7 +277,7 @@ templates.userModel =[
         <input type="text" class="form-control message" name="message" placeholder="message">
       </div>
       <div class="btn-group sendMsgBtns">
-        <button type="submit" class="btn btn-info sendMsg">Send</button>
+        <button type="button" class="btn btn-info sendMsg">Send</button>
         <button type="button" class="btn btn-warning back">Back</button>
       </div>
     </form>`
@@ -185,7 +302,7 @@ templates.userModel =[
 
   module.exports = templates;
 
-},{}],6:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 var UserModel = require('./usermodel');
 module.exports = Backbone.Collection.extend({
@@ -196,7 +313,7 @@ module.exports = Backbone.Collection.extend({
   }
 });
 
-},{"./usermodel":8,"backbone":10}],7:[function(require,module,exports){
+},{"./usermodel":12,"backbone":14}],11:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl = require('./templates');
@@ -217,7 +334,7 @@ module.exports = Backbone.View.extend({
   }
 })
 
-},{"./templates":5,"./usermodelview":9,"backbone":10,"underscore":12}],8:[function(require,module,exports){
+},{"./templates":9,"./usermodelview":13,"backbone":14,"underscore":16}],12:[function(require,module,exports){
 var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
   urlRoot: '/users',
@@ -226,7 +343,7 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":10}],9:[function(require,module,exports){
+},{"backbone":14}],13:[function(require,module,exports){
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
@@ -247,9 +364,7 @@ module.exports = Backbone.View.extend({
     // 'click .delete': 'removeBitter',
 },
 
- //  removeBitter: function () {
- //   this.model.destroy();
- // },
+
 
 });
 
@@ -310,7 +425,7 @@ module.exports = Backbone.View.extend({
 //   }
 // });
 
-},{"./templates":5,"backbone":10,"underscore":12}],10:[function(require,module,exports){
+},{"./templates":9,"backbone":14,"underscore":16}],14:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.2
 
@@ -2234,7 +2349,7 @@ module.exports = Backbone.View.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":11,"underscore":12}],11:[function(require,module,exports){
+},{"jquery":15,"underscore":16}],15:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.12.2
  * http://jquery.com/
@@ -13258,7 +13373,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],12:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -14808,4 +14923,4 @@ return jQuery;
   }
 }.call(this));
 
-},{}]},{},[2]);
+},{}]},{},[3]);

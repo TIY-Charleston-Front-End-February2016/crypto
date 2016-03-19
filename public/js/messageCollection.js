@@ -6,5 +6,7 @@ module.exports = Backbone.Collection.extend({
   url: '/cryptograms',
   initialize: function(){
     console.log('message collection initted');
+
   }
-})
+
+});

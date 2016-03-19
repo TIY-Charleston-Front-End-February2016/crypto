@@ -5,7 +5,7 @@ templates.addUser = [
     <form class="form-inline" role="form" action="index.html" method="post">
       <div class="form-group">
         <input type="text" class="form-control username" name="username" placeholder="username">
-        <input type="text" class="form-control password" name="password" placeholder="password">
+        <input type="password" class="form-control password" name="password" placeholder="password">
       </div>
       <button type="submit" class="btn btn-info login">Login</button>
     </form>
@@ -14,7 +14,7 @@ templates.addUser = [
     <form class="form-inline" role="form" action="index.html" method="post">
       <div class="form-group">
         <input type="text" class="form-control username" name="usernameC" placeholder="username">
-        <input type="text" class="form-control password" name="passwordC" placeholder="password">
+        <input type="password" class="form-control password" name="passwordC" placeholder="password">
       </div>
       <button type="submit" class="btn btn-warning create">Create User</button>
     </form>
@@ -54,7 +54,7 @@ templates.userModel =[
         <input type="text" class="form-control message" name="message" placeholder="message">
       </div>
       <div class="btn-group sendMsgBtns">
-        <button type="submit" class="btn btn-info sendMsg">Send</button>
+        <button type="button" class="btn btn-info sendMsg">Send</button>
         <button type="button" class="btn btn-warning back">Back</button>
       </div>
     </form>`

@@ -18,9 +18,7 @@ module.exports = Backbone.View.extend({
     // 'click .delete': 'removeBitter',
 },
 
- //  removeBitter: function () {
- //   this.model.destroy();
- // },
+
 
 });
 
