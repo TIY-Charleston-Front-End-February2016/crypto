@@ -13,7 +13,21 @@ module.exports = Backbone.View.extend({
   templateFail: _.template(tmpl.loginFail),
   initialize: function () {
     this.$el.append(this.render());
+    // this.fetch({
+    //         success: this.fetchSuccess,
+    //         error: this.fetchError
+    //     });
+
+
   },
+  // fetchSuccess: function (collection, response) {
+  //       console.log('Collection fetch success', response);
+  //       console.log('Collection models: ', this.models);
+  //   },
+  //
+  // fetchError: function (collection, response) {
+  //       throw new Error("Incorrect Login Credentials");
+  //   },
   render: function () {
     var markup = this.template;
     this.$el.html(markup);
@@ -44,37 +58,29 @@ module.exports = Backbone.View.extend({
 
   logIn: function(evt){
     evt.preventDefault();
+    that = this;
     var exsistingUser = {
       name: this.$el.find('input[name="username"]').val(),
       passwordHash: this.$el.find('input[name="password"]').val(),
 
     };
-    //THIS IS WHERE THE IF STATEMENT WILL GO FOR USER EXISTING
     var newExistingModel = new loginModel(exsistingUser);
     this.$el.find('input').val('');
-    newExistingModel.save();
-
-      // {}, {
-      //     error: function(error) {
-      //     console.log(error);
-      //     this.fail;
-      //   },
-      //   success: function(data) {
-      //       sessionStorage.setItem('');
-            // var markup = this.templateUser(exsistingUser)
-            // this.$el.html(markup);
-      //   }
-      //
-      //   });
-    this.listenTo(this.collection, 'add', this.addAll);
-    var markup = this.templateUser(exsistingUser)
-    this.$el.html(markup);
+    newExistingModel.save(null, {
+      error: function (model, response) {
+          if (response.statusText === "Internal Server Error") {
+            var markup = that.templateFail;
+            that.$el.prepend(markup);
+         }
+         else {
+           var markup = that.templateUser(exsistingUser)
+           that.$el.html(markup);
+         }
+      },
+  })
   },
 
-  // fail: function(evt){
-  //   var markup = this.templateFail;
-  //   this.$el.append(markup);
-  // },
+
 
   logOut: function(evt){
     evt.preventDefault();
@@ -117,12 +123,12 @@ $(document).ready(function(){
   new AddUserView();
 
   new AddMsgView();
-  // var sightings = new Collection();
-  // sightings.fetch().then(function (data) {
-  //   new CollectionView({collection: sightings});
-  //   var addSightingForm = new FormView({collection: sightings});
-  //   $('.col-md-4').html(addSightingForm.render().el);
 
+  var cryptograms = new MsgCollection();
+    cryptograms.fetch().then(function (data) {
+      new MsgCollectionView({collection: cryptograms});
+      var addMsgForm = new AddMsgView({collection: cryptograms});
+ });
 
 });
 
@@ -293,7 +299,7 @@ templates.userModel =[
 ].join('');
 
 templates.loginFail =[
-  `<div class="container-fluid welcome"><h1>Username or password are not correct </h1>
+  `<div class="container-fluid fail"><h1>Username or password are not correct </h1>
 
   </div>`
 ].join('');
