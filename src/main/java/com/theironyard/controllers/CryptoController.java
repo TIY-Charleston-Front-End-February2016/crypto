@@ -117,8 +117,9 @@ public class CryptoController {
         if(user.getName() == null || user.getPasswordHash() == null||user.getName().isEmpty()||user.getPasswordHash().isEmpty()){
             return new ResponseEntity<Object>("Both User Name And Password Fields Must Be Filled In", HttpStatus.BAD_REQUEST);
         }
-        if (PasswordStorage.verifyPassword(user.getPasswordHash(), users.findFirstByName(user.getName()).getPasswordHash())){
-            user = users.findOne(user.getId());
+        User loginUser = users.findFirstByName(user.getName());
+        if (PasswordStorage.verifyPassword(user.getPasswordHash(), loginUser.getPasswordHash())){
+            user = loginUser;
             session.setAttribute("user", user);
         }else{
             return new ResponseEntity<Object>("Incorrect Login Credentials", HttpStatus.UNAUTHORIZED);
