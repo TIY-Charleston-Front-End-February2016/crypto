@@ -33,7 +33,7 @@ templates.userModel =[
 ].join('');
 
 templates.loginFail =[
-  `<div class="container-fluid welcome"><h1>Username or password are not correct </h1>
+  `<div class="container-fluid fail"><h1>Username or password are not correct </h1>
 
   </div>`
 ].join('');

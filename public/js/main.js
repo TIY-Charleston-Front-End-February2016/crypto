@@ -14,11 +14,11 @@ $(document).ready(function(){
   new AddUserView();
 
   new AddMsgView();
-  // var sightings = new Collection();
-  // sightings.fetch().then(function (data) {
-  //   new CollectionView({collection: sightings});
-  //   var addSightingForm = new FormView({collection: sightings});
-  //   $('.col-md-4').html(addSightingForm.render().el);
 
+  var cryptograms = new MsgCollection();
+    cryptograms.fetch().then(function (data) {
+      new MsgCollectionView({collection: cryptograms});
+      var addMsgForm = new AddMsgView({collection: cryptograms});
+ });
 
 });

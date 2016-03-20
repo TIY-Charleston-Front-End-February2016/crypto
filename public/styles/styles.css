@@ -11,10 +11,6 @@ nav {
     nav div form {
       background-color: inherit; }
 
-input.recipient {
-  width: 200px;
-  display: inline-block; }
-
 div.message {
   border-bottom: .5px solid #bce8f1; }
   div.message h5 {
@@ -35,3 +31,8 @@ div.decryptMsg div.encryption {
 
 div.decryptMsg .decryptBtns {
   float: right; }
+
+div.fail {
+  color: red; }
+  div.fail h1 {
+    font-size: 12px; }
