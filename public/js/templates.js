@@ -44,7 +44,7 @@ templates.userModel =[
   ].join('');
   templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
-      <div class="form-group">
+      <div class="form-group recipient">
         <input type="text" class="form-control recipient" name="recipient" placeholder="username">
       </div>
       <div class="form-group">
@@ -75,6 +75,9 @@ templates.userModel =[
           </div>
         </form>
       </div>`
+  ].join('');
+  templates.userDropdown= [
+    `<option><%= username %></option>`
   ].join('');
 
   module.exports = templates;

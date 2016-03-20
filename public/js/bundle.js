@@ -269,8 +269,13 @@ templates.userModel =[
   ].join('');
   templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
-      <div class="form-group">
+      <div class="form-group recipient">
         <input type="text" class="form-control recipient" name="recipient" placeholder="username">
+      </div>
+      <div class="form-group userDropdown">
+        <select name="users">
+
+        </select>
       </div>
       <div class="form-group">
         <input type="text" class="form-control hint" name="hint" placeholder="hint">
@@ -300,6 +305,9 @@ templates.userModel =[
           </div>
         </form>
       </div>`
+  ].join('');
+  templates.userDropdown= [
+    `<option><%= username %></option>`
   ].join('');
 
   module.exports = templates;
