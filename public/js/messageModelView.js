@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
 var $ = require('jquery');
+var AddMsgView = require('./sendMessageView')
 
 module.exports = Backbone.View.extend({
   el: '.appendGame',
@@ -14,7 +15,7 @@ module.exports = Backbone.View.extend({
   },
   addOne: function(){
     var markup = this.template(this.model.toJSON());
-    console.log(markup);
+    window.globby = markup;
     this.$el.html(markup);
     return this;
   },

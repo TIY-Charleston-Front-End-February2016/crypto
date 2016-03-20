@@ -32,20 +32,29 @@ templates.userModel =[
   </div>`
 ].join('');
 
+templates.loginFail =[
+  `<div class="container-fluid welcome"><h1>Username or password are not correct </h1>
+
+  </div>`
+].join('');
+
   templates.message= [
     `<div class="message panel-body">
-      <h5><%= username %></h5>
-      <p><%= hint %></p>
+      <h5>Sender</h5>
+      <p>Hint</p>
+      <p>Scramble</p>
       <div class="btn-group msgBtns">
-        <button type="button" class="btn btn-default" name="play"><span class="glyphicon glyphicon-play"></span></button>
+        <button type="button" class="btn btn-default play" name="play"><span class="glyphicon glyphicon-play"></span></button>
         <button type="button" class="btn btn-default" name="destroy"><span class="glyphicon glyphicon-trash"></span></button>
       </div>
     </div>`
   ].join('');
   templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
-      <div class="form-group recipient">
-        <input type="text" class="form-control recipient" name="recipient" placeholder="username">
+
+      <div class="form-group">
+        <input type="text" class="form-control recipient" name="recipient" placeholder="recipient">
+
       </div>
       <div class="form-group">
         <input type="text" class="form-control hint" name="hint" placeholder="hint">
@@ -61,7 +70,7 @@ templates.userModel =[
   ].join('');
   templates.gamePage= [
     `<div class="encryption panel-body">
-      <h4 class="scramble"><%= scramble %></h4>
+      <h4 class="scramble">Scramble</h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">

@@ -13,6 +13,7 @@ module.exports = Backbone.View.extend({
   addOne: function(el){
     var modelView = new messageModelView({model: el});
     console.log(modelView);
+    // window.globthree = modelView;
     this.$el.append(modelView.render().el);
   },
   addAll: function(){
