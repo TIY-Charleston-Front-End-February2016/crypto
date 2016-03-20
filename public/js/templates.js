@@ -47,11 +47,6 @@ templates.userModel =[
       <div class="form-group recipient">
         <input type="text" class="form-control recipient" name="recipient" placeholder="username">
       </div>
-      <div class="form-group userDropdown">
-        <select name="users">
-
-        </select>
-      </div>
       <div class="form-group">
         <input type="text" class="form-control hint" name="hint" placeholder="hint">
       </div>
