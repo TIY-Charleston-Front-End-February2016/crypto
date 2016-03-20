@@ -9,16 +9,16 @@ module.exports = Backbone.Collection.extend({
 
   },
 
-  parse: function (data) {
-    var that = this;
-    window.glob3= data;
-    // return _.map(data.photos.photo, function (el) {
-    //
-    //   return { photoUrl: that.buildImgUrl(el),
-    //            title: el.title,
-    //            dtUpload: el.dateupload
-    //          };
-    // });
-  },
+  // parse: function (data) {
+  //   var that = this;
+  //   window.glob3= data;
+  //   return _.map(data.photos.photo, function (el) {
+  //
+  //     return { photoUrl: that.buildImgUrl(el),
+  //              title: el.title,
+  //              dtUpload: el.dateupload
+  //            };
+  //   });
+  // },
 
 });

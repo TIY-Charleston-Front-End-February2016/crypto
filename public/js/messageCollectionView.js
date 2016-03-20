@@ -5,8 +5,9 @@ var $ =require('jquery');
 var messageModelView = require('./messageModelView');
 
 module.exports = Backbone.View.extend({
-  templateHome: _.template(tmpl.message),
   el: '.sendMsgBody',
+  template: _.template(tmpl.gamePage),
+  templateMsg: _.template(tmpl.message),
   initialize: function(){
     console.log('message collection view initted');
     this.addAll();
@@ -26,6 +27,9 @@ module.exports = Backbone.View.extend({
     window.glob1 = this.collection.models;
     _.each(this.collection.models, this.addOne, this);
   },
-
-
+  render: function(){
+    var markup = this.templateMsg;
+    this.$el.html(markup);
+    return this;
+  }
 })

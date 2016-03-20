@@ -128,17 +128,17 @@ module.exports = Backbone.Collection.extend({
 
   },
 
-  parse: function (data) {
-    var that = this;
-    window.glob3= data;
-    // return _.map(data.photos.photo, function (el) {
-    //
-    //   return { photoUrl: that.buildImgUrl(el),
-    //            title: el.title,
-    //            dtUpload: el.dateupload
-    //          };
-    // });
-  },
+  // parse: function (data) {
+  //   var that = this;
+  //   window.glob3= data;
+  //   return _.map(data.photos.photo, function (el) {
+  //
+  //     return { photoUrl: that.buildImgUrl(el),
+  //              title: el.title,
+  //              dtUpload: el.dateupload
+  //            };
+  //   });
+  // },
 
 });
 
@@ -150,8 +150,9 @@ var $ =require('jquery');
 var messageModelView = require('./messageModelView');
 
 module.exports = Backbone.View.extend({
-  templateHome: _.template(tmpl.message),
   el: '.sendMsgBody',
+  template: _.template(tmpl.gamePage),
+  templateMsg: _.template(tmpl.message),
   initialize: function(){
     console.log('message collection view initted');
     this.addAll();
@@ -171,8 +172,11 @@ module.exports = Backbone.View.extend({
     window.glob1 = this.collection.models;
     _.each(this.collection.models, this.addOne, this);
   },
-
-
+  render: function(){
+    var markup = this.templateMsg;
+    this.$el.html(markup);
+    return this;
+  }
 })
 
 },{"./messageModelView":7,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],6:[function(require,module,exports){
@@ -190,7 +194,8 @@ var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
 var $ = require('jquery');
-var AddMsgView = require('./sendMessageView')
+var AddMsgView = require('./sendMessageView');
+var messageModel = require('./messageModel');
 
 module.exports = Backbone.View.extend({
   el: '.appendGame',
@@ -209,7 +214,7 @@ module.exports = Backbone.View.extend({
   render: function(){}
 });
 
-},{"./sendMessageView":8,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
+},{"./messageModel":6,"./sendMessageView":8,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
@@ -338,11 +343,11 @@ templates.loginFail =[
   ].join('');
   templates.gamePage= [
     `<div class="encryption panel-body">
-      <h4 class="scramble">Scramble</h4>
+      <h4 class="scramble"><%= scramble %></h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">
-          <div class="form-group">
+          <div class="form-group dropInputs">
             <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
           </div>
           <div class="btn-group decryptBtns">
