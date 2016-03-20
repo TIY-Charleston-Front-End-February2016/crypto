@@ -38,6 +38,7 @@ module.exports = Backbone.View.extend({
       success: function(model, response){
       }
     });
+    console.log("newUserModel", newUserModel)
     this.listenTo(this.collection, 'add', this.addAll);
   },
 
@@ -52,10 +53,28 @@ module.exports = Backbone.View.extend({
     var newExistingModel = new loginModel(exsistingUser);
     this.$el.find('input').val('');
     newExistingModel.save();
+
+      // {}, {
+      //     error: function(error) {
+      //     console.log(error);
+      //     this.fail;
+      //   },
+      //   success: function(data) {
+      //       sessionStorage.setItem('');
+            // var markup = this.templateUser(exsistingUser)
+            // this.$el.html(markup);
+      //   }
+      //
+      //   });
     this.listenTo(this.collection, 'add', this.addAll);
     var markup = this.templateUser(exsistingUser)
     this.$el.html(markup);
   },
+
+  // fail: function(evt){
+  //   var markup = this.templateFail;
+  //   this.$el.append(markup);
+  // },
 
   logOut: function(evt){
     evt.preventDefault();
