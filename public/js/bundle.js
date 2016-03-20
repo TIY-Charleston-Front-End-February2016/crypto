@@ -182,7 +182,8 @@ var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
 var $ = require('jquery');
-var AddMsgView = require('./sendMessageView')
+var AddMsgView = require('./sendMessageView');
+var messageModel = require('./messageModel');
 
 module.exports = Backbone.View.extend({
   el: '.appendGame',
@@ -202,7 +203,7 @@ module.exports = Backbone.View.extend({
   render: function(){}
 });
 
-},{"./sendMessageView":8,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
+},{"./messageModel":6,"./sendMessageView":8,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
@@ -329,11 +330,11 @@ templates.loginFail =[
   ].join('');
   templates.gamePage= [
     `<div class="encryption panel-body">
-      <h4 class="scramble">Scramble</h4>
+      <h4 class="scramble"><%= scramble %></h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">
-          <div class="form-group">
+          <div class="form-group dropInputs">
             <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
           </div>
           <div class="btn-group decryptBtns">
