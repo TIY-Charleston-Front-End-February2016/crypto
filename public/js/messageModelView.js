@@ -15,7 +15,6 @@ module.exports = Backbone.View.extend({
   },
   addOne: function(){
     var markup = this.template(this.model.toJSON());
-    window.globby = markup;
     this.$el.html(markup);
     return this;
   },
