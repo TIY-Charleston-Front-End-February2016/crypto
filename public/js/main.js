@@ -6,6 +6,8 @@ var AddUserView = require('./adduserview');
 var MsgCollection = require('./messageCollection');
 var MsgCollectionView = require('./messageCollectionView');
 var AddMsgView = require('./sendMessageView');
+var MsgModel = require('./messageModel');
+var MsgModelView = require('./messageModelView');
 
 $(document).ready(function(){
 

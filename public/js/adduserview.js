@@ -8,13 +8,10 @@ module.exports = Backbone.View.extend({
   el: '.navbar',
   template: _.template(tmpl.addUser),
   templateUser: _.template(tmpl.userModel),
+  templateMsg: _.template(tmpl.sendMsgForm),
+  templateFail: _.template(tmpl.loginFail),
   initialize: function () {
-    console.log("I WAS CALLED", this.$el);
-  //  console.log(myTmpl);
-   console.log(this.template);
     this.$el.append(this.render());
-
-
   },
   render: function () {
     var markup = this.template;
@@ -24,7 +21,8 @@ module.exports = Backbone.View.extend({
   events: {
     'click .create': 'addUser',
     'click .login': 'logIn',
-    'click .logout': 'logOut'
+    'click .logout': 'logOut',
+    'click .send': 'sendMessageForm',
   },
   addUser: function(evt){
     evt.preventDefault();
@@ -37,12 +35,9 @@ module.exports = Backbone.View.extend({
     this.$el.find('input').val('');
     newUserModel.save({},{
       success: function(model, response){
-        console.log('logged in user' + response)
       }
     });
     this.listenTo(this.collection, 'add', this.addAll);
-    var markup = this.templateUser(newUser)
-    this.$el.html(markup);
   },
 
   logIn: function(evt){
@@ -52,6 +47,7 @@ module.exports = Backbone.View.extend({
       passwordHash: this.$el.find('input[name="password"]').val(),
 
     };
+    //THIS IS WHERE THE IF STATEMENT WILL GO FOR USER EXISTING
     var newExistingModel = new loginModel(exsistingUser);
     this.$el.find('input').val('');
     newExistingModel.save();
@@ -65,6 +61,12 @@ module.exports = Backbone.View.extend({
     var markup = this.template;
     this.$el.html(markup);
   },
+
+  sendMessageForm: function(evt){
+    evt.preventDefault();
+    var markup = this.templateMsg;
+    this.$el.siblings('.sendMsg').find('.sendMsgBody').html(markup);
+  }
 
 
 });

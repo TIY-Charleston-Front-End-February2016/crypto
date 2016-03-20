@@ -9,13 +9,10 @@ module.exports = Backbone.View.extend({
   el: '.navbar',
   template: _.template(tmpl.addUser),
   templateUser: _.template(tmpl.userModel),
+  templateMsg: _.template(tmpl.sendMsgForm),
+  templateFail: _.template(tmpl.loginFail),
   initialize: function () {
-    console.log("I WAS CALLED", this.$el);
-  //  console.log(myTmpl);
-   console.log(this.template);
     this.$el.append(this.render());
-
-
   },
   render: function () {
     var markup = this.template;
@@ -25,7 +22,8 @@ module.exports = Backbone.View.extend({
   events: {
     'click .create': 'addUser',
     'click .login': 'logIn',
-    'click .logout': 'logOut'
+    'click .logout': 'logOut',
+    'click .send': 'sendMessageForm',
   },
   addUser: function(evt){
     evt.preventDefault();
@@ -38,12 +36,9 @@ module.exports = Backbone.View.extend({
     this.$el.find('input').val('');
     newUserModel.save({},{
       success: function(model, response){
-        console.log('logged in user' + response)
       }
     });
     this.listenTo(this.collection, 'add', this.addAll);
-    var markup = this.templateUser(newUser)
-    this.$el.html(markup);
   },
 
   logIn: function(evt){
@@ -53,6 +48,7 @@ module.exports = Backbone.View.extend({
       passwordHash: this.$el.find('input[name="password"]').val(),
 
     };
+    //THIS IS WHERE THE IF STATEMENT WILL GO FOR USER EXISTING
     var newExistingModel = new loginModel(exsistingUser);
     this.$el.find('input').val('');
     newExistingModel.save();
@@ -66,6 +62,12 @@ module.exports = Backbone.View.extend({
     var markup = this.template;
     this.$el.html(markup);
   },
+
+  sendMessageForm: function(evt){
+    evt.preventDefault();
+    var markup = this.templateMsg;
+    this.$el.siblings('.sendMsg').find('.sendMsgBody').html(markup);
+  }
 
 
 });
@@ -88,6 +90,8 @@ var AddUserView = require('./adduserview');
 var MsgCollection = require('./messageCollection');
 var MsgCollectionView = require('./messageCollectionView');
 var AddMsgView = require('./sendMessageView');
+var MsgModel = require('./messageModel');
+var MsgModelView = require('./messageModelView');
 
 $(document).ready(function(){
 
@@ -103,7 +107,7 @@ $(document).ready(function(){
 
 });
 
-},{"./adduserview":1,"./messageCollection":4,"./messageCollectionView":5,"./sendMessageView":8,"./usercollection":10,"./usercollectionview":11,"backbone":14,"jquery":15}],4:[function(require,module,exports){
+},{"./adduserview":1,"./messageCollection":4,"./messageCollectionView":5,"./messageModel":6,"./messageModelView":7,"./sendMessageView":8,"./usercollection":10,"./usercollectionview":11,"backbone":14,"jquery":15}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var messageModel = require('./messageModel');
 
@@ -133,6 +137,7 @@ module.exports = Backbone.View.extend({
   addOne: function(el){
     var modelView = new messageModelView({model: el});
     console.log(modelView);
+    // window.globthree = modelView;
     this.$el.append(modelView.render().el);
   },
   addAll: function(){
@@ -158,6 +163,7 @@ var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
 var $ = require('jquery');
+var AddMsgView = require('./sendMessageView')
 
 module.exports = Backbone.View.extend({
   el: '.appendGame',
@@ -170,14 +176,14 @@ module.exports = Backbone.View.extend({
   },
   addOne: function(){
     var markup = this.template(this.model.toJSON());
-    console.log(markup);
+    window.globby = markup;
     this.$el.html(markup);
     return this;
   },
   render: function(){}
 });
 
-},{"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
+},{"./sendMessageView":8,"./templates":9,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
@@ -187,38 +193,47 @@ var messageModel = require('./messageModel');
 module.exports = Backbone.View.extend({
   el: '.sendMsgBody',
   template: _.template(tmpl.sendMsgForm),
+  templateMsg: _.template(tmpl.message),
+  templateGame: _.template(tmpl.gamePage),
   initialize: function(){
-    console.log('send message view initted');
     this.$el.append(this.render());
   },
   render: function(){
-    var markup = this.template();
-    console.log("TEST", markup);
+    var markup = this.templateMsg;
     this.$el.html(markup);
     return this;
   },
   events: {
     'click .sendMsg': 'createCrypto',
-    // 'click .back': 'goBack'
+    'click .back': 'goBack',
+    'click .play': 'playGame'
   },
   createCrypto: function(evt){
   evt.preventDefault();
   var newCrypto = {
-
-
-    sender: this.$el.parent().parent().siblings('.navbar').find('h1').text().trim(),
-
-    // timeStamp: new Date(),
+    sender: this.$el.parent().siblings('.navbar').find('h1').text().trim(),
     recipient: this.$el.find('.recipient').val(),
     hint: this.$el.find('.hint').val(),
     originalMessage: this.$el.find('.message').val(),
   };
-  console.log('NANENAENRFRANEN', newCrypto);
+  window.glob = newCrypto;
   var newMsgModel = new messageModel(newCrypto);
-  window.glob = newMsgModel;
-  // this.$el.find('input').val('');
+
+  this.$el.find('input').val('');
   newMsgModel.save();
   this.listenTo(this.collection, 'add', this.addAll);
+},
+
+goBack: function(evt){
+  evt.preventDefault();
+  var markup = this.templateMsg;
+  this.$el.html(markup);
+},
+
+playGame: function(evt){
+  evt.preventDefault();
+  var markup = this.templateGame;
+  this.$el.html(markup);
 },
 });
 
@@ -257,12 +272,19 @@ templates.userModel =[
   </div>`
 ].join('');
 
+templates.loginFail =[
+  `<div class="container-fluid welcome"><h1>Username or password are not correct </h1>
+
+  </div>`
+].join('');
+
   templates.message= [
     `<div class="message panel-body">
-      <h5><%= username %></h5>
-      <p><%= hint %></p>
+      <h5>Sender</h5>
+      <p>Hint</p>
+      <p>Scramble</p>
       <div class="btn-group msgBtns">
-        <button type="button" class="btn btn-default" name="play"><span class="glyphicon glyphicon-play"></span></button>
+        <button type="button" class="btn btn-default play" name="play"><span class="glyphicon glyphicon-play"></span></button>
         <button type="button" class="btn btn-default" name="destroy"><span class="glyphicon glyphicon-trash"></span></button>
       </div>
     </div>`
@@ -270,7 +292,7 @@ templates.userModel =[
   templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
       <div class="form-group">
-        <input type="text" class="form-control recipient" name="recipient" placeholder="username">
+        <input type="text" class="form-control recipient" name="recipient" placeholder="recipient">
       </div>
       <div class="form-group">
         <input type="text" class="form-control hint" name="hint" placeholder="hint">
@@ -286,7 +308,7 @@ templates.userModel =[
   ].join('');
   templates.gamePage= [
     `<div class="encryption panel-body">
-      <h4 class="scramble"><%= scramble %></h4>
+      <h4 class="scramble">Scramble</h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">
