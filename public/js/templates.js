@@ -70,11 +70,11 @@ templates.loginFail =[
   ].join('');
   templates.gamePage= [
     `<div class="encryption panel-body">
-      <h4 class="scramble">Scramble</h4>
+      <h4 class="scramble"><%= scramble %></h4>
     </div>
       <div class="message panel-body">
         <form class="decrypt" role="form" action="index.html" method="post">
-          <div class="form-group">
+          <div class="form-group dropInputs">
             <input type="text" class="form-control" name="input" placeholder="Decrypt the Message">
           </div>
           <div class="btn-group decryptBtns">
