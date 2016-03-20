@@ -310,18 +310,10 @@ templates.loginFail =[
   ].join('');
   templates.sendMsgForm= [
     `<form class="encrypt" role="form" action="index.html" method="post">
-<<<<<<< HEAD
+
       <div class="form-group">
         <input type="text" class="form-control recipient" name="recipient" placeholder="recipient">
-=======
-      <div class="form-group recipient">
-        <input type="text" class="form-control recipient" name="recipient" placeholder="username">
->>>>>>> 08fa2a00e70c7db04d8e514ef46597f27397682d
-      </div>
-      <div class="form-group userDropdown">
-        <select name="users">
 
-        </select>
       </div>
       <div class="form-group">
         <input type="text" class="form-control hint" name="hint" placeholder="hint">
