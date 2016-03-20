@@ -8,6 +8,8 @@ import com.theironyard.services.UserRepository;
 import com.theironyard.utils.PasswordStorage;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -40,70 +42,195 @@ public class CryptoController {
     }
 
     @RequestMapping(path = "/users", method = RequestMethod.GET)
-    public List<User> getUsers(){
-        return (List<User>) users.findAll();
+    public ResponseEntity<Object> getUsers(HttpSession session){
+        if (session.getAttribute("user")== null){
+            return new ResponseEntity<Object>("Login Required To View Users", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Object>((List<User>) users.findAll(),HttpStatus.OK);
     }
     @RequestMapping(path = "/users", method = RequestMethod.POST)
-    public void addUser(@RequestBody User user) throws PasswordStorage.CannotPerformOperationException {
-        user.setPasswordHash(PasswordStorage.createHash(user.getPasswordHash()));
-        users.save(user);
+    public ResponseEntity<Object> addUser(@RequestBody User user) throws PasswordStorage.CannotPerformOperationException {
+        if(user.getName().isEmpty()||user.getPasswordHash().isEmpty()||user.getPasswordHash()==null||user.getName()==null||user.getId()!=0){
+            return new ResponseEntity<Object>("Incomplete Or Incorrect User Information", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            user.setPasswordHash(PasswordStorage.createHash(user.getPasswordHash()));
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Creating Password Hash: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        try {
+            users.save(user);
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Saving New User To Database: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
     @RequestMapping(path = "/users/{id}", method = RequestMethod.PUT )
-    public void editUser(@RequestBody User user, @PathVariable("id") int id, HttpSession session){
-        users.save(user);
+    public ResponseEntity<Object> editUser(@RequestBody User user, @PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Edit Your User", HttpStatus.UNAUTHORIZED);
+        }
+        else if(loggedInUser.getId() != user.getId()){
+            return new ResponseEntity<Object>("Must Be Logged In As Same User Being Edited", HttpStatus.UNAUTHORIZED);
+        }
+        if(user.getId()==0 || user.getPasswordHash()==null || user.getName()==null||user.getName().isEmpty()||user.getPasswordHash().isEmpty()){
+            return new ResponseEntity<Object>("Incomplete User Object Submitted to Server", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            users.save(user);
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Editing User In Database: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
     @RequestMapping(path = "/users/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable("id") int id){
-        users.delete(id);
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Delete Your User", HttpStatus.UNAUTHORIZED);
+        }
+        else if(loggedInUser.getId() != id){
+            return new ResponseEntity<Object>("Must Be Logged In As Same User Being Deleted", HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            users.delete(id);
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Deleting User From Database: ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>("User Deletion Successful", HttpStatus.OK);
     }
     @RequestMapping(path = "/users/{id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("id") int id){
-        return users.findOne(id);
+    public ResponseEntity<Object> getUser(@PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To View A User", HttpStatus.UNAUTHORIZED);
+        }
+        User user = users.findOne(id);
+        if (user == null){
+            return new ResponseEntity<Object>("User Not Found In Database", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public User login(@RequestBody User user, HttpSession session) throws Exception {
+    public ResponseEntity<Object> login(@RequestBody User user, HttpSession session) throws Exception {
+        if(user.getName() == null || user.getPasswordHash() == null||user.getName().isEmpty()||user.getPasswordHash().isEmpty()){
+            return new ResponseEntity<Object>("Both User Name And Password Fields Must Be Filled In", HttpStatus.BAD_REQUEST);
+        }
         if (PasswordStorage.verifyPassword(user.getPasswordHash(), users.findFirstByName(user.getName()).getPasswordHash())){
             user = users.findOne(user.getId());
             session.setAttribute("user", user);
         }else{
-            throw new Exception("Incorrect Login Credentials");
+            return new ResponseEntity<Object>("Incorrect Login Credentials", HttpStatus.UNAUTHORIZED);
         }
-        return user;
+        return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
-    public void logout(HttpSession session){
-        session.invalidate();
+    public ResponseEntity<Object> logout(HttpSession session){
+        try {
+            session.invalidate();
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Logging Out: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>("Logout Successful", HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms", method = RequestMethod.GET)
-    public List<Cryptogram> getCryptograms(){
-        return (List<Cryptogram>) cryptograms.findAll();
+    public ResponseEntity<Object> getCryptograms(HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To View Cryptograms", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Object>((List<Cryptogram>) cryptograms.findAll(), HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms/{sender_id}", method = RequestMethod.GET)
-    public List<Cryptogram> getSenderCryptograms(@PathVariable("sender_id") int id){
-        return cryptograms.findBySender(users.findOne(id));
+    public ResponseEntity<Object> getSenderCryptograms(@PathVariable("sender_id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Retrieve Sender Cryptograms", HttpStatus.UNAUTHORIZED);
+        }
+        User sender = users.findOne(id);
+        if(sender==null){
+            return new ResponseEntity<Object>("Sender Not Found In Database", HttpStatus.NOT_FOUND);
+        }else if(sender.getId()!=loggedInUser.getId()){
+            return new ResponseEntity<Object>("Logged In User ID Does Not Match Sender ID", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Object>(cryptograms.findBySender(sender), HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms/{recipient_id}", method = RequestMethod.GET)
-    public List<Cryptogram> getRecipientCryptograms(@PathVariable("recipient_id") int id){
-        return cryptograms.findByRecipient(users.findOne(id));
+    public ResponseEntity<Object> getRecipientCryptograms(@PathVariable("recipient_id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Retrieve Recipient Cryptograms", HttpStatus.UNAUTHORIZED);
+        }
+        User recipient = users.findOne(id);
+        if(recipient==null){
+            return new ResponseEntity<Object>("Recipient Not Found In Database", HttpStatus.NOT_FOUND);
+        }else if(recipient.getId()!=loggedInUser.getId()){
+            return new ResponseEntity<Object>("Logged In User ID Does Not Match Recipient ID", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Object>(cryptograms.findByRecipient(recipient), HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms", method = RequestMethod.POST)
-    public void addCryptogram(@RequestBody CryptogramDto cryptogramDto){
+    public ResponseEntity<Object> addCryptogram(@RequestBody CryptogramDto cryptogramDto, HttpSession session){
+        if(cryptogramDto.getSender()==null||cryptogramDto.getRecipient()==null||cryptogramDto.getOriginalMessage()==null){
+            return new ResponseEntity<Object>("Incomplete cryptogramDto Parameters", HttpStatus.BAD_REQUEST);
+        }
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Add A Cryptogram", HttpStatus.UNAUTHORIZED);
+        }
         User sender = users.findFirstByName(cryptogramDto.getSender());
+        if (sender.getId()!=loggedInUser.getId()){
+            return new ResponseEntity<Object>("Sender Must Be Same As Logged In User", HttpStatus.UNAUTHORIZED);
+        }
         User recipient = users.findFirstByName((cryptogramDto.getRecipient()));
+        if (recipient == null){
+            return new ResponseEntity<Object>("Recipient Could Not Be Found In Database", HttpStatus.NOT_FOUND);
+        }
         Cryptogram cryptogram = new Cryptogram(generateScramble(cryptogramDto), cryptogramDto.getOriginalMessage(), cryptogramDto.getHint(), sender, recipient, false, LocalDateTime.now());
-        cryptograms.save(cryptogram);
+        try {
+            cryptograms.save(cryptogram);
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Saving New Cryptogram To Database: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(cryptogram, HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.PUT)
-    public void editCryptogram(@RequestBody Cryptogram cryptogram, @PathVariable("id") int id){
-        cryptograms.save(cryptogram);
+    public ResponseEntity<Object> editCryptogram(@RequestBody Cryptogram cryptogram, @PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Edit A Cryptogram", HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            cryptograms.save(cryptogram);
+        }catch (Exception x){
+            return new ResponseEntity<Object>("Error Editing Cryptogram In Database: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(cryptogram, HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.DELETE)
-    public void deleteCryptogram(@PathVariable("id") int id){
-        cryptograms.delete(id);
+    public ResponseEntity<Object> deleteCryptogram(@PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To Delete A Cryptogram", HttpStatus.UNAUTHORIZED);
+        }
+        if(loggedInUser.getId()!=cryptograms.findOne(id).getSender().getId()){
+            return new ResponseEntity<Object>("User ID Does Not Match Cryptogram Sender ID", HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            cryptograms.delete(id);
+        }catch(Exception x){
+            return new ResponseEntity<Object>("Error Deleting Cryptogram From Database: " + x.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>("Cryptogram Deletion Successful", HttpStatus.OK);
     }
     @RequestMapping(path = "/cryptograms/{id}", method = RequestMethod.GET)
-    public Cryptogram getCryptogram(@PathVariable("id") int id){
-        return cryptograms.findOne(id);
+    public ResponseEntity<Object> getCryptogram(@PathVariable("id") int id, HttpSession session){
+        User loggedInUser = (User) session.getAttribute("user");
+        if(loggedInUser == null){
+            return new ResponseEntity<Object>("Must Be Logged In To View A Cryptogram", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Object>(cryptograms.findOne(id), HttpStatus.OK);
     }
     public String generateScramble(CryptogramDto cryptogramDto){
         String originalMessage = cryptogramDto.getOriginalMessage().toLowerCase();
@@ -133,8 +260,6 @@ public class CryptoController {
         for(String l:cryptogramArr){
             cryptogram += l;
         }
-        System.out.println(cryptogram);
-
         return cryptogram;
     }
 }
