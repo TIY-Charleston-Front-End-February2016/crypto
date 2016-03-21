@@ -9,8 +9,10 @@ import com.theironyard.services.UserRepository;
 import com.theironyard.utils.PasswordStorage;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -26,6 +28,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CryptoApplication.class)
 @WebAppConfiguration
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CryptoApplicationTests {
 	@Autowired
 	WebApplicationContext wap;
@@ -41,7 +44,7 @@ public class CryptoApplicationTests {
 	}
 
 	@Test
-	public void addUser() throws Exception {
+	public void aaddUser() throws Exception {
 		User user = new User("Bob", "password");
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(user);
@@ -55,7 +58,7 @@ public class CryptoApplicationTests {
 		//don't keep this line
 	}
 	@Test
-	public void	login() throws Exception{
+	public void	blogin() throws Exception{
 		User user = new User("James", "crypto");
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(user);
@@ -69,25 +72,24 @@ public class CryptoApplicationTests {
 
 
 	@Test
-	public void	deleteUser() throws Exception {
-		testLogin();
+	public void	zdeleteUser() throws Exception {
+		int id = users.findFirstByName("James").getId();
 		mockMvc.perform(
-				MockMvcRequestBuilders.delete(String.format("/users/%s", users.findFirstByName("James").getId()))
+				MockMvcRequestBuilders.delete(String.format("/users/%s", id)).sessionAttr("user", users.findFirstByName("James"))
 		);
 		Assert.assertTrue(users.count()==4);
 		//keep this comment
 	}
 
 	@Test
-	public void findFirstUserByName(){
+	public void dfindFirstUserByName(){
 		User user = users.findFirstByName("James");
 		Assert.assertTrue(user.getName().equalsIgnoreCase("James"));
 
 	}
 
 	@Test
-	public void addCryptogram() throws Exception {
-		testLogin();
+	public void eaddCryptogram() throws Exception {
 		CryptogramDto cryptogramDto = new CryptogramDto("This is a Test", "This is a Hint", "James", "Weesie");
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(cryptogramDto);
@@ -95,12 +97,23 @@ public class CryptoApplicationTests {
 				MockMvcRequestBuilders.post("/cryptograms")
 						.content(json)
 						.contentType("application/json")
+				.sessionAttr("user", users.findFirstByName("James"))
 		);
 		System.out.println(cryptograms.count());
 		Assert.assertTrue(cryptograms.count()==1);
 	}
 
-	public void testLogin() throws Exception {
+	@Test
+	public void fgetCryptogramsBySender() throws Exception {
+		Assert.assertTrue(cryptograms.findBySender(users.findFirstByName("James")).size()==1);
+	}
+
+	@Test
+	public void ggetCryptogramsByRecipient() throws Exception{
+		Assert.assertTrue(cryptograms.findByRecipient(users.findFirstByName("Weesie")).size()==1);
+	}
+
+	public void htestLogin() throws Exception {
 		User user = new User("James", "crypto");
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(user);
