@@ -184,7 +184,7 @@ public class CryptoController {
         if (sender.getId()!=loggedInUser.getId()){
             return new ResponseEntity<Object>("Sender Must Be Same As Logged In User", HttpStatus.UNAUTHORIZED);
         }
-        User recipient = users.findFirstByName((cryptogramDto.getRecipient()));
+        User recipient = users.findFirstByName(cryptogramDto.getRecipient());
         if (recipient == null){
             return new ResponseEntity<Object>("Recipient Could Not Be Found In Database", HttpStatus.NOT_FOUND);
         }
