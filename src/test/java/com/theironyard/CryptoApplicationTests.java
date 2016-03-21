@@ -71,15 +71,15 @@ public class CryptoApplicationTests {
 	}
 
 
-//	@Test
-//	public void	zdeleteUser() throws Exception {
-//		int id = users.findFirstByName("James").getId();
-//		mockMvc.perform(
-//				MockMvcRequestBuilders.delete(String.format("/users/%s", id)).sessionAttr("user", users.findFirstByName("James"))
-//		);
-//		Assert.assertTrue(users.count()==4);
-//		//keep this comment
-//	}
+	@Test
+	public void	zdeleteUser() throws Exception {
+		int id = users.findFirstByName("James").getId();
+		mockMvc.perform(
+				MockMvcRequestBuilders.delete(String.format("/users/%s", id)).sessionAttr("user", users.findFirstByName("James"))
+		);
+		Assert.assertTrue(users.count()==4);
+		//keep this comment
+	}
 
 	@Test
 	public void dfindFirstUserByName(){

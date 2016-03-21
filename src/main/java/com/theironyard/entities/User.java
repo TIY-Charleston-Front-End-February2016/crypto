@@ -2,6 +2,7 @@ package com.theironyard.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Created by PiratePowWow on 3/17/16.
@@ -16,6 +17,10 @@ public class User {
     String name;
     @Column(nullable = false)
     String passwordHash;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "sender")
+    List<Cryptogram> senderCryptograms;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "recipient")
+    List<Cryptogram> recipientCryptograms;
 
     public User(String name, String passwordHash) {
         this.name = name;
